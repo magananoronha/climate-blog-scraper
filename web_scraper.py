@@ -4,6 +4,9 @@
 Created on Sun Sep 10 14:32:36 2017
 
 @author: magananoronha
+
+First iteration of webscraper, tested by scraping 50 blog posts from 
+Watts Up With That.  
 """
 
 from bs4 import BeautifulSoup
@@ -36,6 +39,3 @@ if __name__ == '__main__':
         sleep(random.randint(60,120))
     
     df.to_pickle('20170910_wattsup_test.pkl')
-    
-with open('tmp.html', 'w') as f:
-    f.write(df.loc[0,'content'])

@@ -2,6 +2,10 @@
 Created on Sat Sep  9 16:20:39 2017
 
 @author: magananoronha
+
+Manually compiled the urls for the most recent posts on ~125 blogs. Grab the 
+content of the post and then check for the tags for the previous post.
+
 """
 from bs4 import BeautifulSoup
 import pandas as pd

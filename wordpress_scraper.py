@@ -4,6 +4,11 @@
 Created on Wed Sep 13 22:12:56 2017
 
 @author: magananoronha
+
+First complete webscraper after the Watts Up With That test.  Scraping mostly
+Wordpress blogs, but works on anything that defines that previous post url 
+using the <a rel=prev> or <link rel=prev> tags.  Puts post content into S3 bucket
+and post metadata into a DynamoDB table.  
 """
 
 from bs4 import BeautifulSoup

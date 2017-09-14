@@ -4,6 +4,9 @@
 Created on Wed Sep 13 17:02:11 2017
 
 @author: magananoronha
+
+Taking the 50 blog posts scraped from Watts Up With That and putting them into 
+dynamodb.
 """
 
 import boto3
