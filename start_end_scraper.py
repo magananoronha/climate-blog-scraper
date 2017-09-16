@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Sep 13 22:12:56 2017
+Created on Sat Sep 16 00:22:53 2017
+
 @author: magananoronha
-First complete webscraper after the Watts Up With That test.  Scraping mostly
-Wordpress blogs, but works on anything that defines that previous post url 
-using the <a rel=prev> or <link rel=prev> tags.  Puts post content into S3 bucket
-and post metadata into a DynamoDB table.  
+
+Copy of scraper that goes from most recent and works backwards.  This one 
+starts with first post and moves forwards.  Using for more prolific bloggers.
 """
 
 from bs4 import BeautifulSoup
@@ -26,9 +26,9 @@ def download_page(url):
     else:
         content = requests.get(url).content
     soup = BeautifulSoup(content,'lxml')
-    a_prev = soup.find('a', {'rel':'prev'})
-    link_prev = soup.find('link', {'rel':'prev'})
-    a_pager_older = soup.find('a', {'class':'blog-pager-older-link'})
+    a_prev = soup.find('a', {'rel':'next'})
+    link_prev = soup.find('link', {'rel':'next'})
+    a_pager_older = soup.find('a', {'class':'blog-pager-newer-link'})
     if a_prev is not None:
         new_url = a_prev['href']
     elif link_prev is not None:
@@ -41,7 +41,7 @@ def download_page(url):
 
 
 if __name__ == '__main__':
-    start_urls = pd.read_csv('mix_links.csv')
+    start_urls = pd.read_csv('second_bot.csv')
     start_urls = start_urls.where((pd.notnull(start_urls)), None)
 
     dynamodb = boto3.resource('dynamodb')
@@ -52,18 +52,18 @@ if __name__ == '__main__':
                   'http://www.cfact.org/',
                   'http://www.drroyspencer.com/']
 
-    for i in range(0,2000):
+    for i in range(0,300):
         sleep_time = random.randint(45,90)
         print('Sleep Time: {} seconds'.format(sleep_time))
         sleep(sleep_time)
-        print('Starting Cycle #{}, {} blogs'.format(i, start_urls.count(axis=0)['recent_post']))
+        print('Starting Cycle #{}, {} blogs'.format(i, start_urls.count(axis=0)['first_post']))
         for index in range(0,len(start_urls)):
-            url = start_urls.loc[index,'recent_post']
+            url = start_urls.loc[index,'first_post']
             print(index, url)
             if (url is not None):
                 download_time, content, new_url = download_page(url)
-                start_urls.loc[index, 'recent_post'] = new_url
-                start_urls.to_csv('mix_links.csv',index=False)
+                start_urls.loc[index, 'first_post'] = new_url
+                start_urls.to_csv('second_bot.csv',index=False)
                 post_uuid = str(uuid.uuid4())
                 s3.Bucket('climateblogs').put_object(Key=post_uuid, Body=content)
                 table.put_item(Item={
