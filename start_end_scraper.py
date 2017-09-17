@@ -45,7 +45,7 @@ if __name__ == '__main__':
     start_urls = start_urls.where((pd.notnull(start_urls)), None)
 
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('post_metadata')
+    table = dynamodb.Table('climateblog_metadata')
     s3 = boto3.resource('s3')
 
     block_list = ['http://www.climatedepot.com/',
@@ -61,13 +61,18 @@ if __name__ == '__main__':
             url = start_urls.loc[index,'first_post']
             print(index, url)
             if (url is not None):
-                download_time, content, new_url = download_page(url)
-                start_urls.loc[index, 'first_post'] = new_url
-                start_urls.to_csv('second_bot.csv',index=False)
-                post_uuid = str(uuid.uuid4())
-                s3.Bucket('climateblogs').put_object(Key=post_uuid, Body=content)
-                table.put_item(Item={
-                        'uuid' : post_uuid,
-                        'url' : url,
-                        'homepage' : start_urls.loc[index,'homepage'],
-                        'download_time' : download_time.strftime("%Y-%m-%d %X")})
+                check = table.get_item(Key={'url':url})
+                if 'Item' in check.keys():
+                    start_urls.loc[index, 'first_post'] = None
+                else:
+                    download_time, content, new_url = download_page(url)
+                    start_urls.loc[index, 'first_post'] = new_url
+                    start_urls.to_csv('second_bot.csv',index=False)
+                    post_uuid = str(uuid.uuid4())
+                    s3.Bucket('climateblogs').put_object(Key=post_uuid, Body=content)
+                    table.put_item(Item={
+                            'uuid' : post_uuid,
+                            'url' : url,
+                            'homepage' : start_urls.loc[index,'homepage'],
+                            'download_time' : download_time.strftime("%Y-%m-%d %X")})
+      

@@ -61,7 +61,7 @@ if __name__ == '__main__':
             url = start_urls.loc[index,'recent_post']
             print(index, url)
             if (url is not None):
-                check = table.get_item(Key={'url':start_urls.loc[index, 'url']})
+                check = table.get_item(Key={'url':url})
                 if 'Item' in check.keys():
                     start_urls.loc[index, 'recent_post'] = None
                 else:
