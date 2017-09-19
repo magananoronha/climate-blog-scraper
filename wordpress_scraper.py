@@ -53,7 +53,7 @@ if __name__ == '__main__':
                   'http://www.drroyspencer.com/']
 
     for i in range(0,2000):
-        sleep_time = random.randint(45,90)
+        sleep_time = random.randint(30,45)
         print('Sleep Time: {} seconds'.format(sleep_time))
         sleep(sleep_time)
         print('Starting Cycle #{}, {} blogs'.format(i, start_urls.count(axis=0)['recent_post']))
