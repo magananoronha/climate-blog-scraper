@@ -12,9 +12,14 @@ import random
 df = pd.read_pickle('feature_extract_toy.pkl')
 df = pd.DataFrame(df)
 
+handled = pd.read_csv('handled.csv')
+
 
 site_list = df.groupby('homepage').apply(lambda x :x.iloc[random.choice(range(0,len(x)))])
 site_list.reset_index(drop=True, inplace=True)
+
+site_list = site_list[(site_list.homepage).isin(handled.homepage) == False]
+
 #post_count = df.groupby('homepage').count()
 #
 #site_list = site_list['homepage']
@@ -31,7 +36,7 @@ pub_time_list = []
 df = site_list
 
 for i in range(0,len(df)):
-    tmp = StandardBlogspot(df.iloc[i]['content'])
+    tmp = ModifiedWordpress(df.iloc[i]['content'])
     title_list.append(tmp.title)
     body_list.append(tmp.body)
     pub_list.append(tmp.pub_time)
@@ -50,11 +55,15 @@ df['pub_time'] = pub_time_list
 look = df.drop(['content'],axis=1)
 look['post_len'] = [len(x) if x is not None else 0 for x in look.body]
 
-std_bsp = df[(df.title).notnull() & (df.body).notnull() & (df.pub_time).notnull() & (df.next_post).notnull() & (df.prev_post).notnull()]
-std_bsp['class'] = 'StandardBlogspot'
+std_wp = df[(df.title).notnull() & (df.body).notnull() & (df.pub_time).notnull() & (df.next_post).notnull() & (df.prev_post).notnull()]
+std_wp['class'] = 'StandardWordpress'
 
-std_wp = pd.concat([std_wp.homepage, std_wp['class']], axis=1)
-
-std_wp.to_csv('standard_wordpress.csv')
-
-#wordpress = pd.read_csv('modernwordpress.csv')
+#std_wp = pd.concat([std_wp.homepage, std_wp['class']], axis=1)
+##std_wp
+#std_wp.to_csv('standard_wordpress.csv')
+##
+#wordpress = pd.read_csv('standard_wordpress.csv')
+#blogspot = pd.read_csv('standard_blogspot.csv')
+#
+#handled = pd.concat([wordpress,blogspot],axis=0)
+handled.to_csv('handled.csv',index=False)

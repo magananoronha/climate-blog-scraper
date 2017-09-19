@@ -12,6 +12,8 @@ import pandas as pd
 import datetime
 import random
 import boto3
+import re
+
 
 class StandardWordpress:
     
@@ -31,7 +33,10 @@ class StandardWordpress:
     def get_title(self, soup):
         entry_title = soup.find(class_='entry-title')
         if entry_title is not None:
-            return entry_title.text   
+            return entry_title.text 
+        page_title = soup.find(class_='page-title')
+        if page_title is not None:
+            return page_title.text 
         else:
             return None
     
@@ -39,7 +44,10 @@ class StandardWordpress:
     def get_prev(self, soup):
         a_prev = soup.find('a', {'rel':'prev'})
         if a_prev is not None:
-            return a_prev['href']   
+            return a_prev['href']  
+        link_prev = soup.find('link', {'rel':'prev'})
+        if link_prev is not None:
+            return link_prev['href']        
         else:
             return None        
 
@@ -48,18 +56,36 @@ class StandardWordpress:
         a_next = soup.find('a', {'rel':'next'})
         if a_next is not None:
             return a_next['href'] 
+        link_next = soup.find('link', {'rel':'next'})
+        if link_next is not None:
+            return link_next['href']        
         else:
             return None  
-        
+
+    def concat_body(self, body):
+        body_text = ''
+        body = body.find_all('p')
+        for element in body:
+            body_text += ''.join(element.findAll(text = True))
+        return body_text       
+    
     
     def get_body(self, soup):
-        body_text = ''
         body = soup.find('div', {'class':'entry-content'})
         if body is not None:
-            body = body.find_all('p')
-            for element in body:
-                body_text += ''.join(element.findAll(text = True))
-            return body_text
+            return self.concat_body(body)
+        body = soup.find('div', {'class':'entry-summary'})
+        if body is not None:
+            return self.concat_body(body)
+        body = soup.find('section', {'class':'entry'})
+        if body is not None:
+             return self.concat_body(body)
+        body = soup.find('div', {'class':'entry-container'})
+        if body is not None:
+             return self.concat_body(body)
+        body = soup.find('div', {'class':'post-entry'})
+        if body is not None:
+             return self.concat_body(body)
         else:
             return None
     
@@ -79,7 +105,27 @@ class StandardWordpress:
             if 'title' in abbr_pub.attrs.keys():
                 return abbr_pub['title']
             else:
-                return abbr_pub.text            
+                return abbr_pub.text
+        pub_time = soup.find('div', {'class':'post-box-meta-single'})
+        if pub_time is not None:
+            spans = pub_time.find_all('span')
+            if spans is not None:
+                return spans[-1].text
+        pub_time = soup.find('div', {'class':'postmetadata'})
+            if pub_time is not None:
+                return pub_time.text
+        pub_time = soup.find('span', {'class':'author'})
+        if pub_time is not None:
+            return pub_time.text
+        pub_time = soup.find(class_='meta')
+        if pub_time is not None:
+            li = pub_time.find('li')
+            return li.text
+        pub_time = soup.find('time')
+        if pub_time is not None:
+            return pub_time['datetime']
+        
+        
         else:
             return None
 
@@ -131,7 +177,14 @@ class StandardBlogspot:
             return a_pager_newer['href'] 
         else:
             return None  
-        
+ 
+    def concat_body(self, body):
+        body_text = ''
+        body = body.find_all('p')
+        for element in body:
+            body_text += ''.join(element.findAll(text = True))
+        return body_text   
+       
         
     def get_body(self, soup):
         body = soup.find('div', {'class':'entry-content'})
@@ -139,11 +192,7 @@ class StandardBlogspot:
             return body.text
         post_body = soup.find('div', {'class':'post-body'})
         if post_body is not None:
-            body = post_body.find_all('p')
-            body_text = ''
-            for element in body:
-                body_text += ''.join(element.findAll(text = True))
-            return body_text
+            return self.concat_body(body)
         else:
             return None
     
@@ -161,5 +210,43 @@ class StandardBlogspot:
         else:
             return None
         
+class ModifiedWordpress(StandardWordpress):
+    def __init__(self, content):
+        StandardWordpress.__init__(self,content)
         
+    def first_bold_line(self, body):
+        title = body.find(re.compile(r"^h\d$"))
+        if title is not None:
+            return title.text         
         
+    def get_title(self, soup):
+        entry_title = soup.find(class_='uk-article-title')
+        if entry_title is not None:
+            return entry_title.text 
+        post_title = soup.find('div', {'class':'posttitle'})
+        if post_title is not None:
+            return post_title.text 
+        post_title = soup.find('div', {'class':'post-headline'})
+        if post_title is not None:
+            return post_title.text 
+        post_title = soup.find(class_='entry-header')
+        if post_title is not None:
+            return post_title.text
+        post_title = soup.find(class_='art-postheader')
+        if post_title is not None:
+            return post_title.text     
+        post_title = soup.find(class_='titles')
+        if post_title is not None:
+            return post_title.text  
+        body = soup.find('div', {'class':'post'})
+        if body is not None:
+            return self.first_bold_line(body)
+        body = soup.find('div', {'id':'content'})
+        if body is not None:
+            return self.first_bold_line(body)
+        body = soup.find('section', {'id':'content'})
+        if body is not None:
+            return self.first_bold_line(body)        
+        else:
+            return None
+    
