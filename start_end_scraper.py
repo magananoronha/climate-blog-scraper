@@ -5,7 +5,7 @@ Created on Sat Sep 16 00:22:53 2017
 
 @author: magananoronha
 
-Copy of scraper that goes from most recent and works backwards.  This one 
+Copy of scraper that goes from most recent and works backwards.  This one
 starts with first post and moves forwards.  Using for more prolific bloggers.
 """
 
@@ -52,8 +52,8 @@ if __name__ == '__main__':
                   'http://www.cfact.org/',
                   'http://www.drroyspencer.com/']
 
-    for i in range(0,300):
-        sleep_time = random.randint(45,90)
+    for i in range(0,2000):
+        sleep_time = random.randint(30,45)
         print('Sleep Time: {} seconds'.format(sleep_time))
         sleep(sleep_time)
         print('Starting Cycle #{}, {} blogs'.format(i, start_urls.count(axis=0)['first_post']))
@@ -75,4 +75,3 @@ if __name__ == '__main__':
                             'url' : url,
                             'homepage' : start_urls.loc[index,'homepage'],
                             'download_time' : download_time.strftime("%Y-%m-%d %X")})
-      
