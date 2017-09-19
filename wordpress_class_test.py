@@ -13,7 +13,7 @@ df = pd.read_pickle('feature_extract_toy.pkl')
 df = pd.DataFrame(df)
 
 handled = pd.read_csv('handled.csv')
-
+#
 
 site_list = df.groupby('homepage').apply(lambda x :x.iloc[random.choice(range(0,len(x)))])
 site_list.reset_index(drop=True, inplace=True)
