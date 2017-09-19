@@ -145,7 +145,7 @@ table = dynamodb.Table('climateblog_metadata')
 
 s3 = boto3.client('s3')
 
-response = table.scan(Limit=750)
+response = table.scan(Limit=5000)
 items = response['Items']
 
 df = pd.DataFrame(columns=['url','content','download_time', 'uuid','homepage'],index=range(0,100))
@@ -168,28 +168,3 @@ for i in range(0,len(df)):
     soup = make_soup(df.loc[i, 'content'])
     df.loc[i, 'title'], df.loc[i,'tag_function'] = scan_for_title_tags(soup)
     
-
-
-#        soup = make_soup(content)
-#        
-#        title = scan_for_title_tags(soup)
-#        if title is None:
-#            title = title_from_bold_content(soup)
-#            
-#            
-#            
-#        
-#        for index in range(0,len(start_urls)):
-#            url = start_urls.loc[index,'recent_post']
-#            print(index, url)
-#            if (url is not None):
-#                download_time, content, new_url = download_page(url)
-#                start_urls.loc[index, 'recent_post'] = new_url
-#                start_urls.to_csv('mix_links.csv',index=False)
-#                post_uuid = str(uuid.uuid4())
-#                s3.Bucket('climateblogs').put_object(Key=post_uuid, Body=content)
-#                table.put_item(Item={
-#                        'uuid' : post_uuid,
-#                        'url' : url,
-#                        'homepage' : start_urls.loc[index,'homepage'],
-#                        'download_time' : download_time.strftime("%Y-%m-%d %X")})

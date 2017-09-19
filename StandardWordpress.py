@@ -13,7 +13,7 @@ import datetime
 import random
 import boto3
 
-class StandardWordpress:
+class WattsUpWithThat:
     
     def __init__(self, content):
         self.content = content
@@ -36,6 +36,7 @@ class StandardWordpress:
         else:
             return None
     
+    
     def get_prev(self, soup):
         a_prev = soup.find('a', {'rel':'prev'})
         if a_prev is not None:
@@ -57,7 +58,8 @@ class StandardWordpress:
         if a_author is not None:
             return a_author.text 
         else:
-            return None      
+            return None     
+        
     
     def get_body(self, soup):
         body_text = ''
@@ -78,4 +80,5 @@ class StandardWordpress:
         else:
             return None
 
+class (WattsUpWithThat):
     
