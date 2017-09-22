@@ -28,6 +28,8 @@ class extractors():
                 pub_time = pub_time.find('b')
                 if pub_time:
                     return pub_time.text
+                else:
+                    return None   
             else:
                 return None
     
@@ -126,8 +128,8 @@ class extractors():
             title = soup.find(class_='pagetitle')
             if title:
                 return title.text
-    
-    
+            else:
+                return None    
     
     class StevenGoddard(WordpressFormat):
     
@@ -147,6 +149,8 @@ class extractors():
             author = soup.find('a', {'class':'author-url'})
             if author:
                 return author.text
+            else:
+                return None            
     
         def get_title(self, soup):
             title = soup.find(class_='post-title')
@@ -154,11 +158,18 @@ class extractors():
                 title_h = title.find(re.compile(r"^h\d$"))
                 if title_h:
                     return title_h.text
-    
+                else:
+                    return None
+            else:
+                return None     
+            
+            
         def get_body(self, soup):
             body = soup.find('div', {'class':'post-entry'})
             if body:
                  return self.concat_body(body)
+            else:
+                return None                   
              
         def get_pubtime(self, soup):
             pub_time = soup.find('span', {'class':'date'})
@@ -172,11 +183,6 @@ class extractors():
         def __init__(self, content):
             WordpressFormat.__init__(self,content)
     
-        def get_title(self, soup):
-            title = soup.find('title')
-            if title:
-                return title.text.replace(' | American Elephants','')
-    
     
     class Chiefio(WordpressFormat):
     
@@ -188,8 +194,10 @@ class extractors():
             author_h = author.find(re.compile(r"^h\d$"))
             if author_h:
                 return author_h.text
-    
-    
+            else:
+                return None   
+            
+            
     class SunshineHours(WordpressFormat):
     
         def __init__(self, content):
@@ -247,11 +255,16 @@ class extractors():
             title = soup.find(class_='the-title')
             if title:
                 return title.text
+            else:
+                return None               
+            
     
         def get_author(self, soup):
             author = soup.find('a', {'rel':'author'})
             if author:
                 return author.text
+            else:
+                return None               
     
         def get_pubtime(self, soup):
             pub_time = soup.find('span', {'class':'date-meta'})
@@ -269,6 +282,9 @@ class extractors():
             author = soup.find('span', {'class':'author-name'})
             if author:
                 return author.text
+            else:
+                return None               
+            
     
     class HallOfRecord(BlogspotFormat):
     
@@ -295,6 +311,8 @@ class extractors():
                     return pub_time['title']
                 else:
                     return pub_time.text
+            else:
+                return None                   
     
     
     class JudithCurry(WordpressFormat):
@@ -320,11 +338,16 @@ class extractors():
             pub_time = soup.find('div', {'class':'postmetadata'})
             if pub_time:
                 return pub_time.text
+            else:
+                return None               
+            
     
         def get_body(self, soup):
             body = soup.find('div', {'class':'postentry'})
             if body:
                  return self.concat_body(body)
+            else:
+                return None                   
     
     
     class ClimateAudit(WordpressFormat):
@@ -343,7 +366,8 @@ class extractors():
             author = soup.find('a', {'rel':'author'})
             if author:
                 return author.text
-    
+            else:
+                return None       
     
     class AutonomousMind(WordpressFormat):
     
@@ -371,12 +395,17 @@ class extractors():
         def get_title(self, soup):
             title = soup.find('title')
             if title:
-                return title.text.replace(' « the Air Vent','')
+                return re.findall('(.*)«',title.text)
+            else:
+                return None               
+            
     
         def get_body(self, soup):
             body = soup.find('div', {'class':'entrytext'})
             if body:
                  return self.concat_body(body)
+            else:
+                return None                   
     
     
     class Omnologos(WordpressFormat):
@@ -402,7 +431,10 @@ class extractors():
                 title = title.find('a')
                 if title:
                     return title.text
-    
+                else:
+                    return None   
+            else:
+                return None       
     
         def get_pubtime(self, soup):
             pub_time = soup.find('div', {'class':'date'})
@@ -446,11 +478,6 @@ class extractors():
         def __init__(self, content):
             WordpressFormat.__init__(self,content)
     
-        def get_title(self, soup):
-            title = soup.find('title')
-            if title:
-                return title.text.replace('  |  The Global Warming Policy Forum (GWPF)','')
-    
     
         def get_pubtime(self, soup):
             pub_time = soup.find('ul', {'class':'meta'})
@@ -460,6 +487,8 @@ class extractors():
                     return pub_time_li.text.replace('Date: ','')
                 else:
                     return pub_time.text
+            else:
+                return None                   
     
         def get_author(self, soup):
             author = soup.find('ul', {'class':'meta'})
@@ -469,7 +498,8 @@ class extractors():
                     return author_li[2].text
                 else:
                     return author.text
-    
+            else:
+                return None       
     
     
     class BobTisdale(WordpressFormat):
@@ -511,12 +541,6 @@ class extractors():
         def __init__(self, content):
             WordpressFormat.__init__(self,content)
     
-        def get_title(self, soup):
-            title = soup.find('title')
-            if title:
-                return title.text.replace(' | An Honest Climate Debate','')
-    
-    
     
     class ClimateConversation(WordpressFormat):
     
@@ -533,6 +557,8 @@ class extractors():
             pub_time = soup.find('span', {'class':'entry-date'})
             if pub_time:
                 return pub_time.text
+            else:
+                return None               
     
     class ADogNamedKyoto(BlogspotFormat):
     
@@ -554,12 +580,17 @@ class extractors():
             post_title = soup.find(class_='art-postheader')
             if post_title:
                 return post_title.text
+            else:
+                return None               
     
         def get_author(self, soup):
             author = soup.find('a', {'rel':'author'})
             if author:
                 return author.text
-    
+            else:
+                return None   
+            
+            
         def get_pubtime(self, soup):
             return re.findall("@ (\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d) .*$", str(soup))[0]
         
@@ -567,7 +598,8 @@ class extractors():
             body = soup.find(class_='art-postcontent')
             if body:
                  return self.concat_body(body)
-             
+            else:
+                return None                
                 
     class NoFrakkingConsensus(WordpressFormat):
     
@@ -579,16 +611,14 @@ class extractors():
         def __init__(self, content):
             WordpressFormat.__init__(self,content)
     
-        def get_title(self, soup):
-            title = soup.find('title')
-            if title:
-                return title.text.replace(' | The Unbearable Nakedness of CLIMATE CHANGE','')
-    
         def get_body(self, soup):
             body = soup.find('div', {'class':'content'})
             if body:
                  return self.concat_body(body)
-    
+            else:
+                return None   
+            
+            
     class DrRoySpencer(WordpressFormat):
     
         def __init__(self, content):
@@ -597,13 +627,18 @@ class extractors():
         def get_title(self, soup):
             title = soup.find('title')
             if title:
-                return title.text.replace(' «  Roy Spencer, PhD','')
-    
+                return re.findall('(.*)«',title.text)[0]
+            else:
+                return None   
+            
         def get_pubtime(self, soup):
             pub_time = soup.find('small')
             if pub_time:
                 return pub_time.text.replace(' by Roy W. Spencer, Ph. D.','')
-    
+            else:
+                return None   
+            
+            
     class LeastThing(BlogspotFormat):
     
         def __init__(self, content):
@@ -633,11 +668,7 @@ class extractors():
     
         def __init__(self, content):
             WordpressFormat.__init__(self,content)
-    
-        def get_title(self, soup):
-            title = soup.find('title')
-            if title:
-                return title.text.replace(' | Green Hell Blog','')
+
     
     class DevConsultancyGroup(BlogspotFormat):
     
@@ -661,11 +692,16 @@ class extractors():
             title = soup.find('title')
             if title:
                 return title.text
+            else:
+                return None               
     
         def get_body(self, soup):
             body = soup.find('div', {'class':'storybody'})
             if body:
                  return self.concat_body(body)
+            else:
+                return None   
+                
     
         def get_pubtime(self, soup):
             pub_time = soup.find(class_='postmetadata')
@@ -687,6 +723,8 @@ class extractors():
                     return title_h.text
                 else:
                     return title.text
+            else:
+                return None                   
     
     
     class ClimateSkeptic(WordpressFormat):
@@ -702,7 +740,8 @@ class extractors():
                     return pub_time['datetime']
                 else:
                     return pub_time.text
-
+            else:
+                return None   
     
     
     class PolarBearScience(WordpressFormat):
@@ -715,17 +754,14 @@ class extractors():
     
         def __init__(self, content):
             WordpressFormat.__init__(self,content)
-    
-        def get_title(self, soup):
-            title = soup.find('title')
-            if title:
-                return title.text.replace(' | Where\'s my Global Warming Dude? By Global Freeze','')
+
     
         def get_body(self, soup):
             body = soup.find('div', {'class':'words'})
             if body:
                  return self.concat_body(body)
-    
+            else:
+                return None       
     
     class ClimateResistance(WordpressFormat):
     
@@ -736,11 +772,15 @@ class extractors():
             post_title = soup.find(class_='art-postheader')
             if post_title:
                 return post_title.text
+            else:
+                return None               
     
         def get_body(self, soup):
             body = soup.find(class_='art-postcontent')
             if body:
                  return self.concat_body(body)
+            else:
+                return None                   
     
     class Co2Insanity(WordpressFormat):
     
@@ -800,15 +840,19 @@ class extractors():
                     return title_h.text
                 else:
                     return title.text
-    
+            else:
+                return None   
+            
         def get_author(self, soup):
             author = soup.find(class_='postauthor')
             if author:
                 author_a = author.find('a')
                 if author_a:
                     return author_a.text
+                else:
+                    return author.text
             else:
-                return author.text
+                return None                   
     
     class Co2Coalition(WordpressFormat):
     
@@ -819,6 +863,8 @@ class extractors():
             body = soup.find('div', {'class':'entry-summary'})
             if body:
                  return self.concat_body(body)
+            else:
+                return None                   
     
     
     class TrustYetVerify(WordpressFormat):
@@ -861,11 +907,6 @@ class extractors():
         def __init__(self, content):
             WordpressFormat.__init__(self,content)
     
-        def get_title(self, soup):
-            title = soup.find('title')
-            if title:
-                return title.text.replace(' | Global Warming: A Worn-Out Hoax','')
-    
     
     class ClimateChangeDispatch(WordpressFormat):
     
@@ -882,6 +923,8 @@ class extractors():
             body = soup.find(class_='tm-article-content')
             if body:
                  return self.concat_body(body)
+            else:
+                return None                   
              
         def get_pubtime(self, soup):
             pub_time = soup.find('time')
@@ -890,18 +933,14 @@ class extractors():
                     return pub_time['datetime']
                 else:
                     return pub_time.text
+            else:
+                return None                   
                 
     
     class TheGWPFOrg(WordpressFormat):
     
         def __init__(self, content):
             WordpressFormat.__init__(self,content)
-    
-    
-        def get_title(self, soup):
-            title = soup.find('title')
-            if title:
-                return title.text.replace('  |  The Global Warming Policy Foundation (GWPF)','')
     
     
         def get_pubtime(self, soup):
@@ -912,6 +951,9 @@ class extractors():
                     return pub_time_li.text.replace('Date: ','')
                 else:
                     return pub_time.text
+            else:
+                return None                   
+                
     
         def get_author(self, soup):
             author = soup.find('ul', {'class':'meta'})
@@ -921,6 +963,8 @@ class extractors():
                     return author_li[2].text
                 else:
                     return author.text
+            else:
+                return None                   
     
     class CcgiNewbery1(WordpressFormat):
     
@@ -934,27 +978,27 @@ class extractors():
                 title = title.find('a')
                 if title:
                     return title.text
+            else:
+                return None                   
     
         def get_pubtime(self, soup):
             pub_time = soup.find('span', {'class':'author'})
             if pub_time:
                 return pub_time.text.replace('\r\n\tPosted by TonyN on ','')
-    
+            else:
+                return None       
     
     class Nigguraths(WordpressFormat):
     
         def __init__(self, content):
             WordpressFormat.__init__(self,content)
     
-        def get_title(self, soup):
-            title = soup.find('title')
-            if title:
-                return title.text.replace(' | Shub Niggurath Climate','')
-    
         def get_body(self, soup):
             body = soup.find('div', {'class':'content'})
             if body:
                  return self.concat_body(body)
+            else:
+                return None                   
     
     
     class AllRightAllRight(BlogspotFormat):
@@ -974,18 +1018,17 @@ class extractors():
                 title = title.find('a')
                 if title:
                     return title.text
+                else:
+                    return None                   
+            else:
+                return None                   
     
     
     class RhinoHide(WordpressFormat):
     
         def __init__(self, content):
             WordpressFormat.__init__(self,content)
-    
-        def get_title(self, soup):
-            title = soup.find('title')
-            if title:
-                return title.text.replace(' | The Whiteboard','')
-    
+
     
     class TheClimateBet(WordpressFormat):
     
@@ -996,11 +1039,15 @@ class extractors():
             title = soup.find('title')
             if title:
                 return title.text.replace(' at The Global Warming Challenge','')
+            else:
+                return None               
     
         def get_body(self, soup):
             body = soup.find('div', {'class':'main'})
             if body:
                  return self.concat_body(body)
+            else:
+                return None                   
     
         def get_pubtime(self, soup):
             pub_time = soup.find('div', {'class':'signature'})
@@ -1010,21 +1057,22 @@ class extractors():
                     return pub_time_p[1].text
                 else:
                     return pub_time.text
+            else:
+                return None                   
+                
     
     class ClimateSanity(WordpressFormat):
     
         def __init__(self, content):
             WordpressFormat.__init__(self,content)
     
-        def get_title(self, soup):
-            title = soup.find('title')
-            if title:
-                return title.text.replace(' | Climate Sanity','')
     
         def get_body(self, soup):
             body = soup.find('div', {'class':'entrytext'})
             if body:
                  return self.concat_body(body)
+            else:
+                return None                   
     
     
     class AGWHeretic(BlogspotFormat):
@@ -1060,9 +1108,9 @@ class extractors():
             pub_time = soup.find('span', {'class':'post-info2'})
             if pub_time:
                 pub_time.a.decompose()
-                pub_time = pub_time.text.replace('\n\t\t on ','')
-                pub_time = pub_time.replace(' |  ','')
-    
+                return re.findall('on (.*)\|',pub_time.text)[0]
+            else:
+                return None               
     
         def get_title(self, soup):
             title = soup.find(class_='titles')
@@ -1079,6 +1127,8 @@ class extractors():
             body = soup.find('div', {'class':'home-post-wrap'})
             if body:
                  return self.concat_body(body)
+            else:
+                return None                   
              
     
     class HauntingTheLibrary(WordpressFormat):
@@ -1095,8 +1145,10 @@ class extractors():
         def get_title(self, soup):
             title = soup.find('title')
             if title:
-                return title.text.replace('Carlin Economics and Science  » ','')
-    
+                return re.findall('» (.*)',title.text)[0]
+            else:
+                return None               
+            
     class PetesPlace(BlogspotFormat):
     
         def __init__(self, content):
@@ -1112,6 +1164,8 @@ class extractors():
             entry_title = soup.find(class_='uk-article-title')
             if entry_title:
                 return entry_title.text
+            else:
+                return None               
     
     
         def get_pubtime(self, soup):
@@ -1121,11 +1175,15 @@ class extractors():
                     return pub_time['datetime']
                 else:
                     return pub_time.text
+            else:
+                return None                   
     
         def get_body(self, soup):
             body = soup.find(class_='uk-article')
             if body:
                  return self.concat_body(body)
+            else:
+                return None                   
              
     class ClimateOfSophistry(WordpressFormat):
     
@@ -1149,4 +1207,244 @@ class extractors():
         def __init__(self, content):
             WordpressFormat.__init__(self,content)
             
+    class RealClimateScience(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content)
             
+            
+    class CGFI(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content)       
+            
+            
+    class ClimateEdinburgh(BlogspotFormat):
+    
+        def __init__(self, content):
+            BlogspotFormat.__init__(self,content) 
+            
+            
+    class ClimateGuy(BlogspotFormat):
+    
+        def __init__(self, content):
+            BlogspotFormat.__init__(self,content) 
+            
+            
+    class CalderUp(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content)
+            
+
+    class PopularTechnology(BlogspotFormat):
+    
+        def __init__(self, content):
+            BlogspotFormat.__init__(self,content)      
+            
+            
+    class JunkScience(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content)            
+            
+    class SteveMosher(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content)  
+            
+        def get_body(self, soup):
+            body = soup.find('div', {'class':'content'})
+            if body:
+                 return self.concat_body(body)
+            else:
+                return None                   
+             
+    class ImpactOfCC(BlogspotFormat):
+    
+        def __init__(self, content):
+            BlogspotFormat.__init__(self,content)   
+            
+            
+    class TroyCA(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content) 
+        
+    
+        def get_body(self, soup):
+            body = soup.find('div', {'class':'storycontent'})
+            if body:
+                 return self.concat_body(body)
+            else:
+                return None                   
+             
+                
+    class NoCarbonTax(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content) 
+            
+
+    class TheInconvenientSkeptic(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content)             
+            
+            
+        def get_body(self, soup):
+            body = soup.find('div', {'id':'content'})
+            if body:
+                 return self.concat_body(body)    
+            else:
+                return None                   
+                
+             
+        def get_title(self, soup):
+            title = soup.find('title')
+            if title:
+                title_car = re.findall('»(.*)',title.text)[0]
+                if title_car:
+                    return title_car
+                else:
+                    return None
+            else:
+                return None                       
+             
+        def get_pubtime(self, soup):
+            pub_time = soup.find('div', {'class':'post-details'})
+            if pub_time:
+                pub_time_h = pub_time.find(re.compile(r"^h\d$"))
+                if pub_time_h:
+                    return re.findall('inconvenientskeptic on (.*)', pub_time_h.text)[0]
+            else:
+                return None
+            
+            
+    class KiwiThinker(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content)   
+            
+            
+    class ClimateSenseNorpag(BlogspotFormat):
+    
+        def __init__(self, content):
+            BlogspotFormat.__init__(self,content)   
+            
+            
+    class UnsettledClimate(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content)   
+            
+            
+    class TreesForTheForest(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content)   
+            
+            
+    class ThePompousGit(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content)   
+            
+    class FriendsOfCo2(BlogspotFormat):
+    
+        def __init__(self, content):
+            BlogspotFormat.__init__(self,content)  
+            
+    class ClimateContrarian(BlogspotFormat):
+    
+        def __init__(self, content):
+            BlogspotFormat.__init__(self,content)       
+            
+            
+    class FakeGate(BlogspotFormat):
+    
+        def __init__(self, content):
+            BlogspotFormat.__init__(self,content) 
+            
+    class EnthusiasmScepticismScience(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content)  
+
+    class StatPad(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content)   
+            
+    class DeadmanTurner(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content)
+            
+    class IceAgeNow(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content)
+            
+            
+    class PaulMacrae(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content)
+            
+        def get_pubtime(self, soup):
+            pub_time = soup.find(class_='posted')
+            if pub_time:
+                return re.findall('on (.*)', pub_time.text)[0]
+            else:
+                return None               
+            
+            
+    class TheWeatherWiz(BlogspotFormat):
+    
+        def __init__(self, content):
+            BlogspotFormat.__init__(self,content) 
+            
+            
+    class GlobalWarmingFactOrFiction(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content)
+            
+        def get_title(self, soup):
+            title = soup.find('title')
+            if title:
+                return re.findall('» (.*)',title.text)[0]
+            else:
+                return None               
+            
+        def get_pubtime(self, soup):
+            pub_time = soup.find('div', {'class':'postdate'})
+            if pub_time:
+                return re.findall('on (.*) by',pub_time.text)[0]
+            else:
+                return None               
+            
+            
+    class PoliClimate(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content)
+            
+        def get_body(self, soup):
+            body = soup.find('div', {'class':'user-content'})
+            if body:
+                 return self.concat_body(body)
+            else:
+                return None                
+                
+    class Ubilibertas(WordpressFormat):
+    
+        def __init__(self, content):
+            WordpressFormat.__init__(self,content)  
+            
+            
+    class PerhapsAllNatural(BlogspotFormat):
+    
+        def __init__(self, content):
+            BlogspotFormat.__init__(self,content)  

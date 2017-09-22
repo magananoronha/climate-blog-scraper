@@ -25,6 +25,8 @@ import boto3
 import psycopg2
 from customclasses import extractors
 
+with open('postgres_password.txt') as f:
+    password = f.read().strip()
 
 toy_data = pd.read_pickle('../data/feature_extract_toy.pkl')
 
@@ -33,9 +35,9 @@ toy_data.reset_index(drop=True, inplace=True)
 
 blog_table = pd.read_csv('classnames.csv')
 
-#conn = psycopg2.connect(database='testdb', user='magananoronha', password="Play12it",
-#    host='testdb.cvslli4tn2ay.us-west-2.rds.amazonaws.com', port='5432',
-#    connect_timeout=10)
+conn = psycopg2.connect(database='testdb', user='magananoronha', password=password,
+    host='testdb.cvslli4tn2ay.us-west-2.rds.amazonaws.com', port='5432',
+    connect_timeout=10)
 
 conn = psycopg2.connect(dbname='blogtest', user='postgres', host='/tmp')
 
@@ -49,7 +51,7 @@ for i in range(len(toy_data)):
         method = blog.iloc[0]['className']
         method_to_call = getattr(extractors, method)
         result = method_to_call(post.content)
-        if result.pub_time is None:
+        if result.body is None:
             problem_children.append(method)
         
 print(problem_children)

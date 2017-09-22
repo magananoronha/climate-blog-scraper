@@ -8,6 +8,7 @@ Created on Sun Sep 17 20:26:39 2017
 
 from bs4 import BeautifulSoup
 from dateutil.parser import parse
+import re
 
 
 class WordpressFormat:
@@ -45,9 +46,15 @@ class WordpressFormat:
         title = soup.find(class_='page-title')
         if title:
             return title.text
+        title = soup.find('title')
+        if title:
+            title_bar = re.findall('(.*)\|',title.text)
+            if title_bar:
+                return title_bar[0]
+            else:
+                return None
         else:
-            return None
-        
+            return None        
         
     def get_author(self, soup):
         author = soup.find(class_='fn')
