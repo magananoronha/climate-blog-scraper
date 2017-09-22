@@ -1,6 +1,6 @@
 CREATE TABLE blogs (
   url VARCHAR(255) PRIMARY KEY NOT NULL,
-  cleaning_class VARCHAR(45) NULL
+  cleaning_class VARCHAR(255) NULL
 );
 
 CREATE TABLE posts (
@@ -9,7 +9,7 @@ CREATE TABLE posts (
   download_date TIMESTAMP NULL,
   blog_url VARCHAR(255) NULL references blogs(url),
   title VARCHAR(255) NULL,
-  author VARCHAR(45) NULL,
+  author VARCHAR(255) NULL,
   pub_date TIMESTAMP NULL,
   body TEXT NULL
 );

@@ -32,7 +32,10 @@ class extractors():
                     return None   
             else:
                 return None
-    
+            
+        def get_author(self, soup):
+            return None
+        
     
     class WattsUpWithThat(WordpressFormat):
     
@@ -395,7 +398,7 @@ class extractors():
         def get_title(self, soup):
             title = soup.find('title')
             if title:
-                return re.findall('(.*)«',title.text)
+                return re.findall('(.*)«',title.text)[0]
             else:
                 return None               
             
@@ -1148,6 +1151,9 @@ class extractors():
                 return re.findall('» (.*)',title.text)[0]
             else:
                 return None               
+            
+        def get_author(self, soup):
+            return None            
             
     class PetesPlace(BlogspotFormat):
     

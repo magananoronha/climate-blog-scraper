@@ -17,7 +17,11 @@ class WordpressFormat:
         self.content = content
         soup = self.make_soup()
         self.title = self.get_title(soup)
+        if self.title:
+            self.title = self.clean_title()        
         self.author = self.get_author(soup)
+        if self.author:
+            self.author = self.clean_author()        
         self.prev_post = self.get_prev(soup)
         self.next_post = self.get_next(soup)
         self.body = self.get_body(soup)
@@ -38,7 +42,20 @@ class WordpressFormat:
     def clean_body(self):
         return " ".join(self.body.split())
     
-
+    
+    def clean_title(self):
+        if len(self.title) > 255:
+            return None        
+        else:
+            return " ".join(self.title.split())    
+    
+    def clean_author(self):
+        if len(self.author) > 255:
+            return None
+        else:
+            return " ".join(self.author.split())         
+    
+    
     def get_title(self, soup):
         title = soup.find(class_='entry-title')
         if title:
