@@ -52,8 +52,9 @@ if __name__ == '__main__':
     
     cursor = conn.cursor()
     
-    cursor.execute('DROP TABLE blogs CASCADE;')
-    cursor.execute('DROP TABLE posts CASCADE;')
+    #cursor.execute('DROP TABLE blogs CASCADE;')
+    
+    #cursor.execute('DROP TABLE posts CASCADE;')
 #    
     with open('../building_postgres/db_schema.sql') as f:
         sql = f.read()
@@ -78,3 +79,5 @@ if __name__ == '__main__':
         else:
             break
     
+    conn.commit()
+    conn.close()
