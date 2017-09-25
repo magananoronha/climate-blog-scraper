@@ -7,9 +7,23 @@ Created on Fri Sep 22 10:17:55 2017
 """
 
 import boto3
+import botocore
 import psycopg2
 from customclasses import extractors
 from time import gmtime, strftime
+
+def check_s3_key(post):
+    exists = False
+    try:
+        s3.head_object(Bucket='climateblogs', Key=post['uuid'])
+    except botocore.exceptions.ClientError as e:
+        if e.response['Error']['Code'] == "404":
+            exists = False
+        else:
+            raise
+    else:
+        exists = True
+    return exists
     
 def insert_items(items):
     for i in range(len(items)):
@@ -18,7 +32,8 @@ def insert_items(items):
         blog_exists = cursor.fetchall()[0][0]
         cursor.execute("""SELECT exists(select 1 from posts WHERE uuid = %s);""",(post['uuid'],))
         post_in_db = cursor.fetchall()[0][0]
-        if blog_exists and not post_in_db:
+        file_exists = check_s3_key(post)
+        if blog_exists and file_exists and not post_in_db:
             post['content'] = s3.get_object(Bucket='climateblogs', Key=post['uuid'])['Body'].read()
             cursor.execute("""SELECT cleaning_class FROM blogs WHERE url = %s;""",(post['homepage'],))
             method = cursor.fetchall()[0][0]
@@ -60,22 +75,6 @@ if __name__ == '__main__':
     
     cursor = conn.cursor()
     
-    #cursor.execute('DROP TABLE blogs CASCADE;')
-    
-    #cursor.execute('DROP TABLE posts CASCADE;')
-#    
-#    with open('../building_postgres/db_schema.sql') as f:
-#        sql = f.read()
-#        
-#    cursor.execute(sql)
-#    print('made tables')
-#    blog_table = pd.read_csv('classnames.csv')
-#    
-#    for i in range(len(blog_table)):
-#        cursor.execute( """INSERT INTO blogs (url, cleaning_class) 
-#                            VALUES (%s, %s);""",(blog_table.iloc[i]['homepage'],
-#                                                 blog_table.iloc[i]['className']))
-#    print('populated blog table')
     response = table.scan()
     insert_items(response['Items'])
     
