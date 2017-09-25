@@ -8,7 +8,6 @@ Created on Fri Sep 22 10:17:55 2017
 
 from time import sleep
 import pandas as pd
-import datetime
 import boto3
 import psycopg2
 from customclasses import extractors
@@ -19,17 +18,13 @@ table = dynamodb.Table('climateblog_metadata')
 
 s3 = boto3.client('s3')
 
-response = table.scan(Limit=10)
-items = response['Items']
-
 with open('postgres_password.txt') as f:
     password = f.read().strip()
 
-conn = psycopg2.connect(database='testdb', user='magananoronha', password=password,
-    host='testdb.cvslli4tn2ay.us-west-2.rds.amazonaws.com', port='5432',
+conn = psycopg2.connect(database='climateblogsdb', user='magananoronha', password=password,
+    host='climateblogdb.cvslli4tn2ay.us-west-2.rds.amazonaws.com', port='5432',
     connect_timeout=10)
 
-conn = psycopg2.connect(database='testdb', user='postgres')
 
 password = None
 
@@ -50,27 +45,41 @@ for i in range(len(blog_table)):
                         VALUES (%s, %s);""",(blog_table.iloc[i]['homepage'],
                                              blog_table.iloc[i]['className']))
     
+def insert_items(items):
+    for i in range(len(items)):
+        post = items[i]
+        blog = blog_table[blog_table.homepage == post['homepage']]
+        if len(blog) != 0:
+            post['content'] = s3.get_object(Bucket='climateblogs', Key=post['uuid'])['Body'].read()
+            method = blog.iloc[0]['className']
+            method_to_call = getattr(extractors, method)
+            result = method_to_call(post['content'])        
+            cursor.execute( """INSERT INTO posts (url, uuid, download_date, blog_url, title, author, pub_date, body) 
+             VALUES (%s,%s,%s,%s,%s,%s,%s,%s);""",(post['url'],
+                                                   post['uuid'],
+                                                   post['download_time'],
+                                                   post['homepage'],
+                                                   result.title,
+                                                   result.author,
+                                                   result.pub_time,
+                                                   result.body))
+          
     
-for i in range(len(items)):
-    post = items[i]
-    blog = blog_table[blog_table.homepage == post['homepage']]
-    if len(blog) != 0:
-        post['content'] = s3.get_object(Bucket='climateblogs', Key=post['uuid'])['Body'].read()
-        method = blog.iloc[0]['className']
-        method_to_call = getattr(extractors, method)
-        result = method_to_call(post['content'])        
-        cursor.execute( """INSERT INTO posts (url, uuid, download_date, blog_url, title, author, pub_date, body) 
-         VALUES (%s,%s,%s,%s,%s,%s,%s,%s);""",(post['url'],
-                                               post['uuid'],
-                                               post['download_time'],
-                                               post['homepage'],
-                                               result.title,
-                                               result.author,
-                                               result.pub_time,
-                                               result.body))
-        
+response = table.scan(Limit=10)
+insert_items(response['Items'])
+
+#while True:
+#    print(len(response['Items']))
+#    sleep(10)
+#    if response.get('LastEvaluatedKey'):
+#        response = table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
+#        insert_items(response['Items'])
+#    else:
+#        break
+#
+
 cursor.execute("SELECT * FROM posts;")
 
 tmp = cursor.fetchall()
 
-        
+print(tmp)
