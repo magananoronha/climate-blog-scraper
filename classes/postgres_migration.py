@@ -18,7 +18,8 @@ def insert_items(items):
     for i in range(len(items)):
         post = items[i]
         blog = blog_table[blog_table.homepage == post['homepage']]
-        if len(blog) != 0:
+        cursor.execute('SELECT * FROM posts WHERE uuid = %s;', (post['uuid'],))
+        if len(cursor.fetchall()) == 0 and len(blog) != 0:
             post['content'] = s3.get_object(Bucket='climateblogs', Key=post['uuid'])['Body'].read()
             method = blog.iloc[0]['className']
             method_to_call = getattr(extractors, method)
@@ -82,6 +83,7 @@ if __name__ == '__main__':
         if response.get('LastEvaluatedKey'):
             response = table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
             insert_items(response['Items'])
+            print(response['LastEvaluatedKey'])
         else:
             break
     
