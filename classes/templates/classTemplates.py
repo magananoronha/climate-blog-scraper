@@ -36,9 +36,13 @@ class WordpressFormat:
     
 
     def format_date(self):
-        return parse(self.pub_time)
-    
-    
+        try:
+            pub_date = parse(self.pub_time)
+        except ValueError:
+            pub_date = None
+        return pub_date
+        
+        
     def clean_body(self):
         return " ".join(self.body.split())
     
