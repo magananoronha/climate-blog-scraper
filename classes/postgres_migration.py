@@ -38,7 +38,11 @@ if __name__ == '__main__':
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('climateblog_metadata')
     
+    print('connected to dynamo')
+
     s3 = boto3.client('s3')
+
+    print('connected to s3')
     
     with open('postgres_password.txt') as f:
         password = f.read().strip()
@@ -46,7 +50,8 @@ if __name__ == '__main__':
     conn = psycopg2.connect(database='climateblogsdb', user='magananoronha', password=password,
         host='climateblogdb.cvslli4tn2ay.us-west-2.rds.amazonaws.com', port='5432',
         connect_timeout=10)
-    
+    conn.autocommit = True
+    print('connected to postgres')
     
     password = None
     
@@ -60,17 +65,18 @@ if __name__ == '__main__':
         sql = f.read()
         
     cursor.execute(sql)
-    
+    print('made tables')
     blog_table = pd.read_csv('classnames.csv')
     
     for i in range(len(blog_table)):
         cursor.execute( """INSERT INTO blogs (url, cleaning_class) 
                             VALUES (%s, %s);""",(blog_table.iloc[i]['homepage'],
                                                  blog_table.iloc[i]['className']))
-    
+    print('populated blog table')
     response = table.scan()
     insert_items(response['Items'])
     
+    print('got first respose')
     while True:
         print(len(response['Items']))
         if response.get('LastEvaluatedKey'):
