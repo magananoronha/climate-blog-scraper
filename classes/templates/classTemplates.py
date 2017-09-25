@@ -32,7 +32,7 @@ class WordpressFormat:
             self.pub_time = self.format_date()
 
     def make_soup(self):
-        return BeautifulSoup(self.content,'lxml')
+        return BeautifulSoup(self.content,'html.parser')
     
 
     def format_date(self):
