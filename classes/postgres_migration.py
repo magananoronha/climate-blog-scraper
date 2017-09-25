@@ -52,8 +52,8 @@ if __name__ == '__main__':
     
     cursor = conn.cursor()
     
-#    cursor.execute('DROP TABLE blogs CASCADE;')
-#    cursor.execute('DROP TABLE posts CASCADE;')
+    cursor.execute('DROP TABLE blogs CASCADE;')
+    cursor.execute('DROP TABLE posts CASCADE;')
 #    
     with open('../building_postgres/db_schema.sql') as f:
         sql = f.read()
@@ -67,24 +67,14 @@ if __name__ == '__main__':
                             VALUES (%s, %s);""",(blog_table.iloc[i]['homepage'],
                                                  blog_table.iloc[i]['className']))
     
-        
-        
-        
-    response = table.scan(Limit=10)
+    response = table.scan()
     insert_items(response['Items'])
     
-    #while True:
-    #    print(len(response['Items']))
-    #    sleep(10)
-    #    if response.get('LastEvaluatedKey'):
-    #        response = table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
-    #        insert_items(response['Items'])
-    #    else:
-    #        break
-    #
+    while True:
+        print(len(response['Items']))
+        if response.get('LastEvaluatedKey'):
+            response = table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
+            insert_items(response['Items'])
+        else:
+            break
     
-    cursor.execute("SELECT * FROM posts;")
-    
-    tmp = cursor.fetchall()
-    
-    print(tmp)
