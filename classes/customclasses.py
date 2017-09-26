@@ -630,7 +630,9 @@ class extractors():
         def get_title(self, soup):
             title = soup.find('title')
             if title:
-                return re.findall('(.*)«',title.text)[0]
+                title_car = re.findall('(.*)«',title.text)
+                if len(title_car) > 0:
+                    return title_car[0]
             else:
                 return None   
             

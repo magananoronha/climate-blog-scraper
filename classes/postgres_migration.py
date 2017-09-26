@@ -11,6 +11,7 @@ import botocore
 import psycopg2
 from customclasses import extractors
 from time import gmtime, strftime
+import pandas as pd
 
 def check_s3_key(post):
     exists = False
