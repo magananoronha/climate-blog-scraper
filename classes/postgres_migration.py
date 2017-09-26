@@ -76,7 +76,7 @@ if __name__ == '__main__':
     
     cursor = conn.cursor()
     
-    response = table.scan()
+    response = table.scan(ExclusiveStartKey='https://stevengoddard.wordpress.com/2013/03/31/what-is-obama-waiting-for/')
     insert_items(response['Items'])
     
     while True:
