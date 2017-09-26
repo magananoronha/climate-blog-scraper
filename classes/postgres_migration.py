@@ -52,14 +52,14 @@ def insert_items(items):
           
 if __name__ == '__main__':
     
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('climateblog_metadata')
-    
-    print('connected to dynamo')
+#    dynamodb = boto3.resource('dynamodb')
+#    table = dynamodb.Table('climateblog_metadata')
+#    
+#    print('connected to dynamo')
+#
+#    s3 = boto3.client('s3')
 
-    s3 = boto3.client('s3')
-
-    print('connected to s3')
+#    print('connected to s3')
     
     with open('postgres_password.txt') as f:
         password = f.read().strip()
@@ -74,20 +74,20 @@ if __name__ == '__main__':
     
     password = None
     
-    cursor = conn.cursor()
-    
-    response = table.scan()
-    insert_items(response['Items'])
-    
-    while True:
-        print(len(response['Items']))
-        if response.get('LastEvaluatedKey'):
-            response = table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
-            insert_items(response['Items'])
-            print(response['LastEvaluatedKey'])
-            print(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
-        else:
-            break
-    
+#    cursor = conn.cursor()
+#    
+#    response = table.scan()
+#    insert_items(response['Items'])
+#    
+#    while True:
+#        print(len(response['Items']))
+#        if response.get('LastEvaluatedKey'):
+#            response = table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
+#            insert_items(response['Items'])
+#            print(response['LastEvaluatedKey'])
+#            print(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
+#        else:
+#            break
+#    
     conn.commit()
     conn.close()
