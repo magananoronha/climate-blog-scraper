@@ -120,12 +120,12 @@ class WordpressFormat:
         body = soup.find('div', {'class':'entry-content'})
         if body:
             return self.concat_body(body)
-        body = soup.find('div', {'class':'post'})
-        if body:
-             return self.concat_body(body)
         body = soup.find(class_='entry')
         if body:
             return self.concat_body(body) 
+        body = soup.find('div', {'class':'post'})
+        if body:
+             return self.concat_body(body)     
         else:
             return None
 

@@ -11,7 +11,9 @@ CREATE TABLE posts (
   title VARCHAR(255) NULL,
   author VARCHAR(255) NULL,
   pub_date TIMESTAMP NULL,
-  body TEXT NULL
+  body TEXT NULL,
+  prev_post VARCHAR(255) NULL,
+  next_post VARCHAR(255) NULL
 );
 
 ALTER TABLE blogs ADD COLUMN recent_post VARCHAR(255) REFERENCES posts(url);
