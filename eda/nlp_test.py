@@ -6,25 +6,10 @@ Created on Thu Sep 28 17:20:07 2017
 @author: magananoronha
 """
 
-import os
 import spacy
 import string
-import codecs
 import pandas as pd
-import itertools as it
-from gensim.models import Phrases, Word2Vec
-from gensim.models.word2vec import LineSentence
-from collections import Counter
-
 import probablepeople as pp
-
-
-#from gensim.corpora import Dictionary, MmCorpus
-#from gensim.models.ldamulticore import LdaMulticore
-#
-#import pyLDAvis
-#import pyLDAvis.gensim
-#import warnings
 
 
 
@@ -135,61 +120,3 @@ if __name__ == '__main__':
     
     df['names'] = lemmatized_sentence_corpus(df)
     df.to_pickle('names.pkl')
-
-
-
-#unigram_sentences_filepath = os.path.join(intermediate_directory,
-#                                          'unigram_sentences_all.txt')    
-#
-#unigram_sentences = LineSentence(unigram_sentences_filepath)
-#
-#
-#unigram_dict = Dictionary(unigram_sentences)
-#
-#
-#
-#bigram_model_filepath = os.path.join(intermediate_directory, 'bigram_model_all')
-#
-#bigram_model = Phrases(unigram_sentences)
-#
-#bigram_model.save(bigram_model_filepath)
-#
-#bigram_sentences_filepath = os.path.join(intermediate_directory,
-#                                         'bigram_sentences_all.txt')
-#
-#
-#with codecs.open(bigram_sentences_filepath, 'w', encoding='utf_8') as f:
-#    
-#    for unigram_sentence in unigram_sentences:
-#        
-#        bigram_sentence = u' '.join(bigram_model[unigram_sentence])
-#        
-#        f.write(bigram_sentence + '\n')
-#
-#
-#bigram_sentences = LineSentence(bigram_sentences_filepath)
-#
-#trigram_model = Phrases(bigram_sentences)
-#
-#
-#trigram_model_filepath = os.path.join(intermediate_directory,
-#                                      'trigram_model_all')
-#
-#trigram_model = Phrases(bigram_sentences)
-#
-#trigram_model.save(trigram_model_filepath)
-#    
-#trigram_model = Phrases.load(trigram_model_filepath)
-#
-#trigram_sentences_filepath = os.path.join(intermediate_directory,
-#                                          'trigram_sentences_all.txt')
-#
-#with codecs.open(trigram_sentences_filepath, 'w', encoding='utf_8') as f:
-#    
-#    for bigram_sentence in bigram_sentences:
-#        
-#        trigram_sentence = u' '.join(trigram_model[bigram_sentence])
-#        
-#        f.write(trigram_sentence + '\n')
-#        
-#trigram_sentences = LineSentence(trigram_sentences_filepath)
