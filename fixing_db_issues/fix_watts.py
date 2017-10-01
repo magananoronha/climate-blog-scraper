@@ -24,7 +24,7 @@ dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table('climateblog_metadata')
 
 response = table.scan(
-    FilterExpression=Attr('homepage').eq('http://tomnelson.blogspot.com/')
+    FilterExpression=Attr('url').contains('max-results=25')
 )
 
 items = response['Items']
@@ -35,7 +35,7 @@ while True:
     sleep(2)
     if response.get('LastEvaluatedKey'):
         response = table.scan(ExclusiveStartKey=response['LastEvaluatedKey'],
-                              FilterExpression=Attr('homepage').eq('http://tomnelson.blogspot.com/'))
+                              FilterExpression=Attr('url').contains('max-results=25'))
         items += response['Items']
     else:
         break
