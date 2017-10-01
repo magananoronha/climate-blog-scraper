@@ -17,15 +17,21 @@ import datetime
 import random
 import boto3
 import uuid
-
+import wget
+import urllib
+import os
 
 def download_page(url):
     download_time = datetime.datetime.now()
     if any(site in url for site in block_list):
         content = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'}).content
+    elif url == 'http://www.coyoteblog.com/':
+	filename = wget.download(url)
+	content = urllib.urlopen(filename).read()
+	os.remove(filename)	
     else:
         content = requests.get(url).content
-    soup = BeautifulSoup(content,'lxml')
+    soup = BeautifulSoup(content)
     a_prev = soup.find('a', {'rel':'prev'})
     link_prev = soup.find('link', {'rel':'prev'})
     a_pager_older = soup.find('a', {'class':'blog-pager-older-link'})

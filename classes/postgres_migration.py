@@ -42,7 +42,7 @@ def insert_items(items):
             method_to_call = getattr(extractors, method)
             result = method_to_call(post['content'])        
             cursor.execute( """INSERT INTO posts (url, uuid, download_date, blog_url, title, author, pub_date, body, prev_post, next_post) 
-             VALUES (%s,%s,%s,%s,%s,%s,%s,%s);""",(post['url'],
+             VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);""",(post['url'],
                                                    post['uuid'],
                                                    post['download_time'],
                                                    post['homepage'],
