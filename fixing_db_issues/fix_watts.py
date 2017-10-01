@@ -24,7 +24,7 @@ dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table('climateblog_metadata')
 
 response = table.scan(
-    FilterExpression=Attr('homepage').eq('http://www.timworstall.com/')
+    FilterExpression=Attr('homepage').eq('http://tomnelson.blogspot.com/')
 )
 
 items = response['Items']
@@ -35,7 +35,7 @@ while True:
     sleep(2)
     if response.get('LastEvaluatedKey'):
         response = table.scan(ExclusiveStartKey=response['LastEvaluatedKey'],
-                              FilterExpression=Attr('homepage').eq('http://www.climatedepot.com/'))
+                              FilterExpression=Attr('homepage').eq('http://tomnelson.blogspot.com/'))
         items += response['Items']
     else:
         break
@@ -43,7 +43,14 @@ while True:
 df = pd.DataFrame(items)
 df['date'] = [re.findall('.com/(\d{4}/\d{2}/\d{2})', x)[0] for x in df.url]
 df['date'] = pd.to_datetime(df['date'])
+
+y = 'max-results=25'
     
+tmp = [True if y in str(x) else False for x in df.url]
+
+buzz = df[tmp]
+
+tmp = ['Left' if 'L' in str(x) else x for x in df['group']]
 
 
 #for item in items:

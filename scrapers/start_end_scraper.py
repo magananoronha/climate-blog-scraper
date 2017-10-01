@@ -52,7 +52,7 @@ if __name__ == '__main__':
                   'http://www.cfact.org/',
                   'http://www.drroyspencer.com/']
 
-    for i in range(0,2000):
+    for i in range(0,200000):
         sleep_time = random.randint(10,15)
         print('Sleep Time: {} seconds'.format(sleep_time))
         sleep(sleep_time)
