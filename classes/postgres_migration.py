@@ -11,6 +11,8 @@ import botocore
 import psycopg2
 from customclasses import extractors
 from time import gmtime, strftime
+from boto3.dynamodb.conditions import Attr
+
 
 def check_s3_key(post):
     exists = False
@@ -77,19 +79,19 @@ if __name__ == '__main__':
     
     cursor = conn.cursor()
     
-    with open('../building_postgres/db_schema.sql') as f:
-        sql = f.read()    
-        
-    cursor.execute(sql)
+#    with open('../building_postgres/db_schema.sql') as f:
+#        sql = f.read()    
+#        
+#    cursor.execute(sql)
+#    
+#    blog_table = pd.read_csv('classnames.csv')
+#
+#    for i in range(len(blog_table)):
+#        cursor.execute( """INSERT INTO blogs (url, cleaning_class) 
+#                            VALUES (%s, %s);""",(blog_table.iloc[i]['homepage'],
+#                                                 blog_table.iloc[i]['className']))    
     
-    blog_table = pd.read_csv('classnames.csv')
-
-    for i in range(len(blog_table)):
-        cursor.execute( """INSERT INTO blogs (url, cleaning_class) 
-                            VALUES (%s, %s);""",(blog_table.iloc[i]['homepage'],
-                                                 blog_table.iloc[i]['className']))    
-    
-    response = table.scan()
+    response = table.scan(FilterExpression=Attr('download_time').gt('2017-09-28 00:00:00'))
     insert_items(response['Items'])
     
     while True:
@@ -97,7 +99,8 @@ if __name__ == '__main__':
             print(len(response['Items']))
             print(response['LastEvaluatedKey'])
             print(strftime("%Y-%m-%d %H:%M:%S", gmtime()))
-            response = table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
+            response = table.scan(ExclusiveStartKey=response['LastEvaluatedKey'], 
+                                  FilterExpression=Attr('download_time').gt('2017-09-28 00:00:00'))
             insert_items(response['Items'])
         else:
             break
