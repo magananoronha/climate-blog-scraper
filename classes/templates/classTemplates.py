@@ -32,13 +32,17 @@ class WordpressFormat:
             self.pub_time = self.format_date()
 
     def make_soup(self):
-        return BeautifulSoup(self.content,'lxml')
+        return BeautifulSoup(self.content,'html.parser')
     
 
     def format_date(self):
-        return parse(self.pub_time)
-    
-    
+        try:
+            pub_date = parse(self.pub_time)
+        except ValueError:
+            pub_date = None
+        return pub_date
+        
+        
     def clean_body(self):
         return " ".join(self.body.split())
     
@@ -116,12 +120,12 @@ class WordpressFormat:
         body = soup.find('div', {'class':'entry-content'})
         if body:
             return self.concat_body(body)
-        body = soup.find('div', {'class':'post'})
-        if body:
-             return self.concat_body(body)
         body = soup.find(class_='entry')
         if body:
             return self.concat_body(body) 
+        body = soup.find('div', {'class':'post'})
+        if body:
+             return self.concat_body(body)     
         else:
             return None
 
