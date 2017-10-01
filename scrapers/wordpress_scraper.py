@@ -26,11 +26,13 @@ def download_page(url):
     if any(site in url for site in block_list):
         content = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'}).content
     elif url == 'http://www.coyoteblog.com/':
-	filename = wget.download(url)
-	content = urllib.urlopen(filename).read()
-	os.remove(filename)	
+        filename = wget.download(url)
+        HtmlFile = open(filename, 'r', encoding='utf-8')
+        content = HtmlFile.read()         
+        content = urllib.urlopen(filename).read()
+        os.remove(filename)	
     else:
-        content = requests.get(url).content
+        content = requests.get(url).contentpy
     soup = BeautifulSoup(content)
     a_prev = soup.find('a', {'rel':'prev'})
     link_prev = soup.find('link', {'rel':'prev'})
@@ -56,7 +58,8 @@ if __name__ == '__main__':
 
     block_list = ['http://www.climatedepot.com/',
                   'http://www.cfact.org/',
-                  'http://www.drroyspencer.com/']
+                  'http://www.drroyspencer.com/,
+                  'http://www.coyoteblog.com/']
 
     for i in range(0,200000):
         sleep_time = random.randint(10,15)

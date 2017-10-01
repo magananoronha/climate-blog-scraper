@@ -111,7 +111,7 @@ class WordpressFormat:
         body_text = ''
         body = body.find_all('p')
         for element in body:
-            body_text += ''.join(element.findAll(text = True))
+            body_text += ' '.join(element.findAll(text = True))
         return body_text
 
 
