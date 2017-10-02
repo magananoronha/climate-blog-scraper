@@ -13,7 +13,7 @@ import os
 if __name__ == '__main__':
     s3 = boto3.resource('s3')
     
-    BUCKET_NAME = 'my-climateblogs' # replace with your bucket name
+    BUCKET_NAME = 'climateblogs' # replace with your bucket name
     KEY = 'cleaned_db.pkl' # replace with your object key
         
     data_directory = '/home/ubuntu/workspace/climate-blog-scraper/data'
