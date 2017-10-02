@@ -5,14 +5,15 @@ Created on Mon Oct  2 07:32:05 2017
 
 @author: magananoronha
 """
-
+from gensim.models import Word2Vec
 from sklearn.manifold import TSNE
+import pandas as pd
 import os
 
 if __name__ == '__main__':
+    data_directory = os.path.join('/home/ubuntu/workspace/climate-blog-scraper/data')
 
     word2vec_filepath = os.path.join(data_directory, 'word2vec_model_all')
-    data_directory = os.path.join('/home/ubuntu/workspace/climate-blog-scraper/data')
     
     blog2vec = Word2Vec.load(word2vec_filepath)
     
