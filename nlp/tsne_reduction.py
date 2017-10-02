@@ -37,7 +37,7 @@ if __name__ == '__main__':
     with open(tsne_filepath, 'w') as f:
         pickle.dump(tsne, f)
     
-#    pd.np.save(tsne_vectors_filepath, tsne_vectors)
+    pd.np.save(tsne_vectors_filepath, tsne_vectors)
 #    
 #    with open(tsne_filepath) as f:
 #        tsne = pickle.load(f)
