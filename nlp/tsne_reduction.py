@@ -26,8 +26,7 @@ if __name__ == '__main__':
     ordered_terms, term_indices, term_counts = zip(*ordered_vocab)
     word_vectors = pd.DataFrame(blog2vec.wv.syn0norm[term_indices, :],
                                 index=ordered_terms)
-    
-    
+        
     tsne_vectors_filepath = os.path.join(data_directory,
                                          u'tsne_vectors.npy')
     
