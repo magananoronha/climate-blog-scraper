@@ -26,3 +26,5 @@ if __name__ == '__main__':
     for i in range(1,12):
         blog2vec.train(preprocessed_text)
         blog2vec.save(word2vec_filepath)
+        
+        

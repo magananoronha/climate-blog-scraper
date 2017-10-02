@@ -11,7 +11,6 @@ import datetime
 import re
 from dateutil.parser import parse
 from collections import Counter
-from difflib import SequenceMatcher
 
 
 df = pd.read_pickle('../data/postgres_db.pkl')
