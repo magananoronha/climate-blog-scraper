@@ -38,18 +38,9 @@ def lemmatized_sentence_corpus(df):
     """
     
     for spacy_doc in nlp.pipe(line_review(df), batch_size=10000, n_threads=60):
-
-        for sent in parsed_review.sents:
+        for sent in spacy_doc.sents:
             yield u' '.join([token.lemma_ for token in sent
                              if not punct_space(token)])    
-    
-    
-    for parsed_review in nlp.pipe(line_review(filename),
-                                  batch_size=10000, n_threads=60):
-        
-        for sent in parsed_review.sents:
-            yield u' '.join([token.lemma_ for token in sent
-                             if not punct_space(token)])
     
     
 def remove_stopwords(sentence):
