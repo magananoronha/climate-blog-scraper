@@ -8,6 +8,7 @@ Created on Mon Oct  2 07:32:05 2017
 from gensim.models import Word2Vec
 from sklearn.manifold import TSNE
 import pandas as pd
+import pickle
 import os
 
 if __name__ == '__main__':
@@ -30,6 +31,8 @@ if __name__ == '__main__':
     tsne_vectors_filepath = os.path.join(data_directory,
                                          u'tsne_vectors.npy')
     
+    tsne_filepath = os.path.join(data_directory,
+                                 u'tsne_model')    
     
     tsne = TSNE()
     tsne_vectors = tsne.fit_transform(word_vectors.values)
