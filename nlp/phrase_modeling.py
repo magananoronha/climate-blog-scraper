@@ -6,11 +6,12 @@ Created on Sun Oct  1 19:17:45 2017
 @author: magananoronha
 """
 
-from gensim.models import Phrases
-from gensim.models.word2vec import LineSentence
+
 import os
 import spacy
 import pandas as pd
+from gensim.models import Phrases
+from gensim.models.word2vec import LineSentence
 
 def punct_space(token):
     """
@@ -49,6 +50,10 @@ def lemmatized_sentence_corpus(df):
         for sent in parsed_review.sents:
             yield u' '.join([token.lemma_ for token in sent
                              if not punct_space(token)])
+    
+    
+def remove_stopwords(sentence):
+    return [term for term in sentence if not term in spacy.en.language_data.STOP_WORDS]
 
     
 if __name__ == '__main__':
@@ -98,4 +103,13 @@ if __name__ == '__main__':
             trigram_sentence = u' '.join(trigram_model[bigram_sentence])
             f.write(trigram_sentence + '\n')
             
+    final_filepath = os.path.join(data_directory, 'final.txt')
+                
+            
     trigram_sentences = LineSentence(trigram_sentences_filepath)
+    
+    
+    with open(final_filepath, 'w', encoding='utf_8') as f:
+        for trigram_sentence in trigram_sentences:
+            trigram_sentence = u' '.join(remove_stopwords(trigram_sentence))
+            f.write(trigram_sentence + '\n')    
