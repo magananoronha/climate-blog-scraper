@@ -56,18 +56,19 @@ if __name__ == '__main__':
         
     unigram_sentences_filepath = os.path.join(data_directory,
                                               'unigram_sentences_all.txt')    
-    
-    
-    with open(unigram_sentences_filepath, 'w', encoding='utf_8') as f:
-        for sentence in lemmatized_sentence_corpus(df):
-            f.write(sentence + '\n')
-
-    
+#    
+#    
+#    with open(unigram_sentences_filepath, 'w', encoding='utf_8') as f:
+#        for sentence in lemmatized_sentence_corpus(df):
+#            f.write(sentence + '\n')
+#
+#    
     unigram_sentences = LineSentence(unigram_sentences_filepath)
     
     bigram_model_filepath = os.path.join(data_directory, 'bigram_model_all')
-    bigram_model = Phrases(unigram_sentences)
-    bigram_model.save(bigram_model_filepath)
+#    bigram_model = Phrases(unigram_sentences)
+#    bigram_model.save(bigram_model_filepath)
+    bigram_model = Phrases.load(bigram_model_filepath)
     bigram_sentences_filepath = os.path.join(data_directory,
                                              'bigram_sentences_all.txt')
     
