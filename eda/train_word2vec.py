@@ -19,7 +19,7 @@ if __name__ == '__main__':
     word2vec_filepath = os.path.join(data_directory, 'word2vec_model_all')
     
     blog2vec = Word2Vec(preprocessed_text, size=100, window=5,
-                        min_count=20, sg=1, workers=20)
+                        min_count=20, sg=1, workers=60)
     
     blog2vec.save(word2vec_filepath)
     
