@@ -1,21 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sun Oct  1 18:33:43 2017
+Created on Sun Oct  1 19:17:45 2017
 
 @author: magananoronha
 """
+
 from gensim.models import Phrases
 from gensim.models.word2vec import LineSentence
-from gensim.models import Word2Vec
 import os
 import spacy
-import boto3
 import pandas as pd
-import itertools as it
-from dateutil.parser import parse
-import datetime
-
 
 def punct_space(token):
     """
@@ -58,15 +53,8 @@ def lemmatized_sentence_corpus(df):
     
 if __name__ == '__main__':
     nlp = spacy.load('en')
-    data_directory = os.path.join('/home/ubuntu/workspace/climate-blog-scraper/data')
+    data_directory = '/home/ubuntu/workspace/climate-blog-scraper/data'
 
-    s3 = boto3.client('s3')
-
-
-    df = s3.get_object(Bucket='climateblogs', Key='cleaned_db.pkl')['Body'].read()
-    
-    
-    
     df_filepath = os.path.join(data_directory, 'cleaned_db.pkl')
     df = pd.read_pickle(df_filepath)    
         
@@ -111,19 +99,3 @@ if __name__ == '__main__':
             f.write(trigram_sentence + '\n')
             
     trigram_sentences = LineSentence(trigram_sentences_filepath)
-    
-
-    
-    
-    trigram_sentences = LineSentence(trigram_sentences_filepath)
-    word2vec_filepath = os.path.join(intermediate_directory, 'word2vec_model_all')
-    
-    food2vec = Word2Vec(trigram_sentences, size=100, window=5,
-                        min_count=20, sg=1, workers=4)
-    
-    food2vec.save(word2vec_filepath)
-    
-    for i in range(1,12):
-    
-        food2vec.train(trigram_sentences)
-        food2vec.save(word2vec_filepath)
