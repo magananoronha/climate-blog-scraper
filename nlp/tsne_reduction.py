@@ -14,7 +14,7 @@ import os
 if __name__ == '__main__':
     data_directory = os.path.join('/home/ubuntu/workspace/climate-blog-scraper/data')
 
-    word2vec_filepath = os.path.join(data_directory, 'word2vec_model_all')
+    word2vec_filepath = os.path.join(data_directory, 'blog2vec')
     
     blog2vec = Word2Vec.load(word2vec_filepath)
     
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     tsne = TSNE()
     tsne_vectors = tsne.fit_transform(word_vectors.values)
     
-    with open(tsne_filepath, 'w') as f:
+    with open(tsne_filepath, 'wb') as f:
         pickle.dump(tsne, f)
     
     pd.np.save(tsne_vectors_filepath, tsne_vectors)
